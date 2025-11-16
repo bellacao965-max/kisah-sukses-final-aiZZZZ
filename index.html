@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ajaib AI — Kisah Sukses Pro (Layout A)</title>
+  <title>Ajaib AI — Kisah Sukses Pro</title>
   <link rel="icon" href="assets/logo.png" />
   <style>
     :root{ --bg:#071028; --card:#0b1220; --accent:#00e5ff; --muted:#9aa6b2; color-scheme: dark; }
@@ -13,8 +13,10 @@
     .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6);min-height:200px;}
     .left,.center,.right{min-height:400px;}
     h2,h3{margin:6px 0 12px 0;}
+
     /* Quote */
     .quote{font-size:16px;color:var(--accent);padding:8px;background:rgba(255,255,255,0.02);border-radius:8px;}
+
     /* AI */
     #aiMessages{height:360px;overflow:auto;padding:8px;background:#00121a;border-radius:8px;}
     .msg-user{text-align:right;margin:6px 0}
@@ -22,45 +24,54 @@
     .bubble{display:inline-block;padding:8px 12px;border-radius:12px;max-width:80%;}
     .bubble.user{background:linear-gradient(90deg,var(--accent),#0066ff);color:#001}
     .bubble.ai{background:#002b3a;color:#e6f7ff}
+
     textarea#prompt{width:100%;height:80px;border-radius:8px;padding:8px;border:none;background:#02101a;color:#e6f7ff}
     .controls{display:flex;gap:8px;margin-top:8px;}
     .btn{background:linear-gradient(90deg,var(--accent),#0066ff);color:#001;border:none;padding:10px 12px;border-radius:8px;cursor:pointer}
+
     /* YouTube + social icons */
     .yt-wrap iframe{width:100%;height:260px;border-radius:10px;border:none}
     .social-row{display:flex;gap:8px;margin-top:8px;justify-content:flex-start}
     .social-row button{flex:1;padding:8px;border-radius:8px;background:#081827;color:#e6f7ff;border:none;cursor:pointer}
+
     /* Game area */
     #gameArea{width:100%;height:260px;background:#00121a;border-radius:10px;padding:8px;overflow:auto}
-    /* responsive */
-    @media(max-width:1000px){ .wrap{grid-template-columns:1fr; } .right{order:3} .left{order:1} .center{order:2} }
+
+    @media(max-width:1000px){ .wrap{grid-template-columns:1fr;} .right{order:3} .left{order:1} .center{order:2} }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- LEFT: Quote top, Game below -->
+
+    <!-- LEFT -->
     <div class="card left">
       <h3>Quote Inspiratif</h3>
       <div id="quoteBox" class="quote">Memuat...</div>
-      <div style="margin-top:10px;"><button class="btn" onclick="loadQuote()">Refresh Quote</button></div>
+      <div style="margin-top:10px;">
+        <button class="btn" onclick="loadQuote()">Refresh Quote</button>
+      </div>
+
       <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
       <h3>Game</h3>
       <div id="gameArea">
-        <div><button class="btn" onclick="startGame('clicker')">Play Clicker</button></div>
+        <button class="btn" onclick="startGame('clicker')">Play Clicker</button>
         <div style="height:8px"></div>
-        <div><button class="btn" onclick="startGame('snake')">Play Snake</button></div>
+        <button class="btn" onclick="startGame('snake')">Play Snake</button>
         <div id="gameFrame" style="margin-top:8px"></div>
       </div>
     </div>
 
-    <!-- CENTER: AI Assistant -->
+    <!-- CENTER -->
     <div class="card center">
       <h2>Asisten AI</h2>
       <div id="aiMessages"></div>
+
       <div style="margin-top:8px;">
         <textarea id="prompt" placeholder="Tanyakan sesuatu..."></textarea>
         <div class="controls">
           <select id="modelSelect" style="flex:1;padding:8px;border-radius:8px;background:#02101a;color:#e6f7ff;border:none">
-            <option value="">Auto (env)</option>
+            <option value="">Auto</option>
             <option value="gemma2-9b-it">GROQ gemma2-9b-it</option>
             <option value="llama-3.1-8b">GROQ llama-3.1-8b</option>
             <option value="gpt-4o-mini">OpenAI gpt-4o-mini</option>
@@ -70,35 +81,41 @@
       </div>
     </div>
 
-    <!-- RIGHT: Quote top + YouTube + Social under YouTube -->
+    <!-- RIGHT -->
     <div class="card right">
       <h3>Featured Video</h3>
+
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
-        <input id="ytSearch" placeholder="Cari YouTube..." style="flex:1;padding:8px;border-radius:8px;border:none;background:#02101a;color:#e6f7ff" />
+        <input id="ytSearch" placeholder="Cari YouTube..." style="flex:1;padding:8px;border-radius:8px;background:#02101a;color:#e6f7ff;border:none" />
         <button class="btn" onclick="searchYouTube()">Search</button>
         <button class="btn" onclick="randomVideo()">Random</button>
       </div>
+
       <div class="yt-wrap">
         <iframe id="ytPlayer" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
       </div>
+
       <div class="social-row" style="margin-top:10px;">
         <button onclick="openSocial('tiktok')">TikTok</button>
         <button onclick="openSocial('instagram')">Instagram</button>
         <button onclick="openSocial('facebook')">Facebook</button>
       </div>
     </div>
+
   </div>
 
 <script>
-// --- AI functions ---
+// ---------- AI ----------
 function appendMessage(role, text){
   const wrap = document.getElementById('aiMessages');
   const div = document.createElement('div');
-  div.className = role==='user'?'msg-user':'msg-ai';
-  const b = document.createElement('div');
-  b.className = 'bubble ' + (role==='user'?'user':'ai');
-  b.innerText = text;
-  div.appendChild(b);
+  div.className = role==='user' ? 'msg-user' : 'msg-ai';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (role==='user' ? 'user' : 'ai');
+  bubble.innerText = text;
+
+  div.appendChild(bubble);
   wrap.appendChild(div);
   wrap.scrollTop = wrap.scrollHeight;
 }
@@ -106,70 +123,135 @@ function appendMessage(role, text){
 async function sendAI(){
   const prompt = document.getElementById('prompt').value.trim();
   if(!prompt) return;
-  const sel = document.getElementById('modelSelect').value || '';
+
+  const model = document.getElementById('modelSelect').value || '';
+
   appendMessage('user', prompt);
   appendMessage('ai', 'Sedang memproses...');
-  try{
-    const res = await fetch('/api/ai', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ prompt, model: sel }) });
+
+  try {
+    const res = await fetch('/api/ai', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({ prompt, model })
+    });
+
     const data = await res.json();
-    // replace last AI "loading" bubble
-    const bubbles = document.querySelectorAll('#aiMessages .msg-ai .bubble');
-    if(bubbles.length) bubbles[bubbles.length-1].innerText = data.reply || data?.message || 'No reply';
-  }catch(e){
-    const bubbles = document.querySelectorAll('#aiMessages .msg-ai .bubble');
-    if(bubbles.length) bubbles[bubbles.length-1].innerText = 'Error: '+(e.message||e);
+
+    const bubbles = document.querySelectorAll('.msg-ai .bubble');
+    bubbles[bubbles.length - 1].innerText = data.reply || 'No reply';
   }
-  document.getElementById('prompt').value='';
+  catch(err){
+    const bubbles = document.querySelectorAll('.msg-ai .bubble');
+    bubbles[bubbles.length - 1].innerText = 'Error: ' + err.message;
+  }
+
+  document.getElementById('prompt').value = "";
 }
 
-// --- Quote ---
+// ---------- QUOTE ----------
 async function loadQuote(){
   try{
     const r = await fetch('/api/quote');
     const d = await r.json();
     document.getElementById('quoteBox').innerText = d.quote;
-  }catch(e){
+  }catch{
     document.getElementById('quoteBox').innerText = 'Tidak dapat mengambil quote.';
   }
 }
 loadQuote();
 
-// --- Games (simple clicker + snake placeholder) ---
-function startGame(name){
-  const f = document.getElementById('gameFrame');
-  f.innerHTML='';
-  if(name==='clicker'){
-    const btn = document.createElement('button'); btn.textContent='KLIK!'; let s=0;
-    const score = document.createElement('div'); score.style.marginTop='8px'; score.innerText='Skor: 0';
-    btn.onclick = ()=>{ s++; score.innerText='Skor: '+s; };
-    f.appendChild(btn); f.appendChild(score);
+// ---------- GAMES ----------
+function startGame(type){
+  const frame = document.getElementById('gameFrame');
+  frame.innerHTML = "";
+
+  if(type === 'clicker'){
+    let score = 0;
+    const btn = document.createElement('button');
+    btn.textContent = "KLIK!";
+    const s = document.createElement('div');
+    s.style.marginTop = "8px";
+    s.innerText = "Skor: 0";
+
+    btn.onclick = ()=>{ score++; s.innerText = "Skor: " + score; };
+
+    frame.appendChild(btn);
+    frame.appendChild(s);
   }
-  if(name==='snake'){
-    const canvas = document.createElement('canvas'); canvas.width=300; canvas.height=200; canvas.style.borderRadius='8px'; f.appendChild(canvas);
+
+  if(type === 'snake'){
+    const canvas = document.createElement('canvas');
+    canvas.width = 300;
+    canvas.height = 200;
+    canvas.style.borderRadius='8px';
+    frame.appendChild(canvas);
+
     initSnakeCanvas(canvas);
   }
 }
+
 function initSnakeCanvas(canvas){
-  const ctx = canvas.getContext('2d'); const size=10; let w=canvas.width,h=canvas.height;
-  let snake=[{x:20,y:20}]; let dir={x:1,y:0}; let food={x:50,y:50};
-  function loop(){ const head={x:snake[0].x+dir.x*size,y:snake[0].y+dir.y*size}; snake.unshift(head); if(head.x===food.x && head.y===food.y){ food={x:Math.floor(Math.random()*(w/size))*size, y:Math.floor(Math.random()*(h/size))*size } } else snake.pop(); ctx.fillStyle='#00121a'; ctx.fillRect(0,0,w,h); ctx.fillStyle='#00ffbf'; snake.forEach(s=>ctx.fillRect(s.x,s.y,size-1,size-1)); ctx.fillStyle='#ff0066'; ctx.fillRect(food.x,food.y,size-1,size-1); }
-  setInterval(loop,120); window.addEventListener('keydown',(e)=>{ if(e.key==='ArrowUp') dir={x:0,y:-1}; if(e.key==='ArrowDown') dir={x:0,y:1}; if(e.key==='ArrowLeft') dir={x:-1,y:0}; if(e.key==='ArrowRight') dir={x:1,y:0}; });
+  const ctx = canvas.getContext('2d');
+  const size = 10;
+  let w = canvas.width, h = canvas.height;
+  let snake = [{x:20,y:20}];
+  let dir = {x:1,y:0};
+  let food = {x:50,y:50};
+
+  function loop(){
+    const head = { x: snake[0].x + dir.x*size, y: snake[0].y + dir.y*size };
+    snake.unshift(head);
+
+    if(head.x === food.x && head.y === food.y){
+      food = {
+        x: Math.floor(Math.random()*(w/size))*size,
+        y: Math.floor(Math.random()*(h/size))*size
+      };
+    } else snake.pop();
+
+    ctx.fillStyle = '#00121a';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.fillStyle = '#00ffbf';
+    snake.forEach(s=>ctx.fillRect(s.x,s.y,size-1,size-1));
+
+    ctx.fillStyle = '#ff0066';
+    ctx.fillRect(food.x,food.y,size-1,size-1);
+  }
+
+  setInterval(loop, 120);
+
+  window.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowUp') dir={x:0,y:-1};
+    if(e.key==='ArrowDown') dir={x:0,y:1};
+    if(e.key==='ArrowLeft') dir={x:-1,y:0};
+    if(e.key==='ArrowRight') dir={x:1,y:0};
+  });
 }
 
-// --- YouTube random and search ---
+// ---------- YOUTUBE ----------
 const sampleVideos = ['dQw4w9WgXcQ','3JZ_D3ELwOQ','kXYiU_JCYtU','9bZkp7q19f0','fJ9rUzIMcZQ'];
-function randomVideo(){ const id = sampleVideos[Math.floor(Math.random()*sampleVideos.length)]; document.getElementById('ytPlayer').src = 'https://www.youtube.com/embed/' + id; }
-function searchYouTube(){ const q = document.getElementById('ytSearch').value.trim(); if(!q) return randomVideo(); window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q),'_blank'); }
 
-// --- Social open ---
+function randomVideo(){
+  const id = sampleVideos[Math.floor(Math.random()*sampleVideos.length)];
+  document.getElementById('ytPlayer').src = "https://www.youtube.com/embed/" + id;
+}
+
+function searchYouTube(){
+  const q = document.getElementById('ytSearch').value.trim();
+  if(!q) return randomVideo();
+  window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(q), '_blank');
+}
+
+randomVideo();
+
+// ---------- SOCIAL ----------
 function openSocial(p){
   if(p==='tiktok') window.open('https://www.tiktok.com','_blank');
   if(p==='instagram') window.open('https://www.instagram.com','_blank');
   if(p==='facebook') window.open('https://www.facebook.com','_blank');
 }
-
-// initial random video
-randomVideo();
 </script>
 </body>
 </html>
