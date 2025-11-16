@@ -1,14 +1,20 @@
-FROM node:18
+# Gunakan Node versi terbaru stabil
+FROM node:18-alpine
 
+# Membuat folder kerja
 WORKDIR /app
 
+# Copy package.json dan package-lock.json
 COPY package*.json ./
 
-RUN npm install --production
+# Install dependencies
+RUN npm install
 
+# Copy semua file project
 COPY . .
 
-ENV PORT=3000
+# Expose port default Render
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+# Jalankan server
+CMD ["npm", "start"]
